@@ -14,10 +14,8 @@ public class Main extends Application {
         primaryStage.setTitle("Client-Server: File Sharing");
         primaryStage.setScene(new Scene(root, 500, 500));
         primaryStage.show();
-
     }
 
     public static void main(String[] args) { launch(args); }
-
 
 }

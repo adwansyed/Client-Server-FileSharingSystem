@@ -3,7 +3,12 @@ package client;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import java.io.*;
 import java.net.Socket;
 
@@ -18,6 +23,38 @@ public class Controller {
     @FXML
     private ListView<String> clientList, serverList;
 
+    @FXML GridPane gridPane;
+
+    // Initialize file lists
+    public void initialize() throws IOException{
+        clientList.setItems(FXCollections.observableArrayList(CLIENT_FILES.list()));
+        serverList.setItems(FXCollections.observableArrayList(SERVER_FILES.list()));
+
+        try {
+            socket = new Socket(SERVER, SOCKET_PORT);
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    // Restart GridPane with fx:id = gridPane
+    // NOTE: Resolves uploading and downloading multiple files
+    void restartClient(){
+        Stage prevStage = (Stage) gridPane.getScene().getWindow();
+        prevStage.hide();
+        System.out.println("Loading CLIENT Files...");
+        System.out.println("Loading SERVER Files...");
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("client.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Exit program with accelerator CTRL+E
     @FXML
     void exit(ActionEvent event) {
         System.exit(0);
@@ -35,6 +72,8 @@ public class Controller {
 
         clientList.setItems(null);
         clientList.setItems(FXCollections.observableArrayList(CLIENT_FILES.list()));
+        restartClient();
+
     }
 
     @FXML
@@ -49,17 +88,8 @@ public class Controller {
 
         serverList.setItems(null);
         serverList.setItems(FXCollections.observableArrayList(SERVER_FILES.list()));
+        restartClient();
     }
-
-    public void initialize() throws IOException{
-        clientList.setItems(FXCollections.observableArrayList(CLIENT_FILES.list()));
-        serverList.setItems(FXCollections.observableArrayList(SERVER_FILES.list()));
-
-        try {
-            socket = new Socket(SERVER, SOCKET_PORT);
-        } catch (Exception e) { e.printStackTrace(); }
-    }
-
 
     public static void transferFile(String fileName) {
         try {
