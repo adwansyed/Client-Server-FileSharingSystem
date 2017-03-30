@@ -1,0 +1,11 @@
+.menuBar {
+    -fx-background-color: mediumseagreen;
+}
+
+.anchorPane{
+    -fx-background-color: darkseagreen;
+}
+
+.button{
+    -fx-background-color: seagreen;
+}
